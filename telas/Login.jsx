@@ -1,45 +1,121 @@
-
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, Animated, Easing, TouchableHighlight, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-
+import { useEffect, useRef, useState } from 'react';
+import LoginForm from '../components/loginForm';
+import CadastroForm from '../components/cadastroForm'
 export default function Login() {
+    const translateY = useRef(new Animated.Value(-350)).current;
+    const logoOpacity = useRef(new Animated.Value(0)).current;
+    const logoScale = useRef(new Animated.Value(0.4)).current;
+    const [isLogin, setIsLogin] = useState(true);
+
+    useEffect(() => {
+        Animated.parallel([
+
+            // CALDA SUAVE (SEM QUIQUE)
+            Animated.timing(translateY, {
+                toValue: 0,
+                duration: 1200,
+                easing: Easing.bezier(0.22, 1, 0.36, 1),
+                useNativeDriver: true,
+            }),
+
+            // LOGO ENTRANDO
+            Animated.sequence([
+                Animated.delay(700),
+                Animated.parallel([
+                    Animated.timing(logoOpacity, {
+                        toValue: 1,
+                        duration: 400,
+                        useNativeDriver: true,
+                    }),
+                    Animated.timing(logoScale, {
+                        toValue: 1,
+                        duration: 400,
+                        easing: Easing.bezier(0.22, 1, 0.36, 1),
+                        useNativeDriver: true,
+                    }),
+                ])
+            ])
+
+        ]).start();
+    }, []);
+
     return (
-        // Removi o padding do ScrollView para a calda encostar nas bordas
         <ScrollView style={styles.content}>
 
-            {/* A calda agora tem um container próprio para não ser afetada pelo padding do conteúdo */}
-            <View style={styles.caldaContainer}>
+            <Animated.View
+                style={[
+                    styles.caldaContainer,
+                    { transform: [{ translateY }] }
+                ]}
+            ><View style={styles.caldaBackground} />
                 <Svg
-                    viewBox="0 0 1440 600" // Ajustado para bater com o final do caminho 'd'
-                    height="180"
                     width="100%"
-
+                    height={160}
+                    viewBox="0 0 1440 320"
+                    style={styles.svg}
                 >
                     <Path
                         fill="#A26F55"
-                        d="M0,64L15,58.7C30,53,60,43,90,69.3C120,96,150,160,180,192C210,224,240,224,270,197.3C300,171,330,117,360,117.3C390,117,420,171,450,213.3C480,256,510,288,540,272C570,256,600,192,630,154.7C660,117,690,107,720,101.3C750,96,780,96,810,117.3C840,139,870,181,900,218.7C930,256,960,288,990,272C1020,256,1050,192,1080,160C1110,128,1140,128,1170,144C1200,160,1230,192,1260,170.7C1290,149,1320,75,1350,42.7C1380,11,1410,21,1425,26.7L1440,32L1440,0L1425,0C1410,0,1380,0,1350,0C1320,0,1290,0,1260,0C1230,0,1200,0,1170,0C1140,0,1110,0,1080,0C1050,0,1020,0,990,0C960,0,930,0,900,0C870,0,840,0,810,0C780,0,750,0,720,0C690,0,660,0,630,0C600,0,570,0,540,0C510,0,480,0,450,0C420,0,390,0,360,0C330,0,300,0,270,0C240,0,210,0,180,0C150,0,120,0,90,0C60,0,30,0,15,0L0,0Z"
-                    />
+                        d="M0,288L30,266.7C60,245,120,203,180,202.7C240,203,300,245,360,266.7C420,288,480,288,540,266.7C600,245,660,203,720,208C780,213,840,267,900,288C960,309,1020,299,1080,277.3C1140,256,1200,224,1260,224C1320,224,1380,256,1410,272L1440,288L1440,0L1410,0C1380,0,1320,0,1260,0C1200,0,1140,0,1080,0C1020,0,960,0,900,0C840,0,780,0,720,0C660,0,600,0,540,0C480,0,420,0,360,0C300,0,240,0,180,0C120,0,60,0,30,0L0,0Z" />
                 </Svg>
+
+                <Animated.Image
+                    source={require('../assets/logo ramalho´s sweets.png')}
+                    style={[
+                        styles.logo,
+                        {
+                            opacity: logoOpacity,
+                            transform: [{ scale: logoScale }]
+                        }
+                    ]}
+                    resizeMode="contain"
+                />
+
+            </Animated.View>
+            <View style={[styles.innerContent]}>
+                {isLogin ? (
+                    <LoginForm />
+                ) : (
+                    <CadastroForm />
+                )}
+
             </View>
 
-            {/* Todo o resto do seu conteúdo dentro de uma View com padding */}
-            <View style={styles.innerContent}>
-        
-            </View>
-
-        </ScrollView>
+        </ScrollView >
     );
 }
-
 const styles = StyleSheet.create({
     content: {
         flex: 1,
         backgroundColor: '#fff1f1',
     },
     caldaContainer: {
-        // Faz a calda ignorar o fluxo e ficar no topo
-        marginTop: 0, // Remove frestas
+        height: 450,
+        shadowColor: '#000',
+        shadowOpacity: 0.25,
+        shadowRadius: 16,
+        shadowOffset: { width: 0, height: 8 },
+
     },
+    caldaBackground: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: '#A26F55',
+        height: 350
+    },
+    svg: {
+        position: 'absolute',
+        bottom: 0,
+    },
+    logo: {
+        position: 'absolute',
+        top: 60, // ajusta altura
+        alignSelf: 'center',
+        width: 250,
+        height: 250,
+    },
+
     innerContent: {
         padding: 20, // O padding agora fica aqui, e não no ScrollView
         marginTop: -180, // Ajuste isso para o texto subir "para dentro" da calda se quiser
