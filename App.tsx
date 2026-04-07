@@ -4,6 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'; // 
 import Sobre from './telas/Sobre';
 import Login from './telas/Login';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import {
+  useFonts,
+  AtkinsonHyperlegible_400Regular
+} from '@expo-google-fonts/atkinson-hyperlegible';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator(); // Adicionado
@@ -33,6 +37,11 @@ function Menu() {
 
 // COMPONENTE PRINCIPAL (O Stack controla o Login vs Menu)
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    AtkinsonHyperlegible_400Regular,
+    AtkinsonHyperlegible_700Bold,
+  });
+  if (!fontsLoaded) return null;
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>

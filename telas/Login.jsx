@@ -1,8 +1,8 @@
 import { StyleSheet, View, ScrollView, Animated, Easing, TouchableHighlight, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useEffect, useRef, useState } from 'react';
-import LoginForm from '../components/loginForm';
-import CadastroForm from '../components/cadastroForm'
+import LoginForm from '../components/LoginForm';
+import CadastroForm from '../components/CadastroForm'
 export default function Login() {
     const translateY = useRef(new Animated.Value(-350)).current;
     const logoOpacity = useRef(new Animated.Value(0)).current;
@@ -76,11 +76,10 @@ export default function Login() {
             </Animated.View>
             <View style={[styles.innerContent]}>
                 {isLogin ? (
-                    <LoginForm />
+                    <LoginForm isLogin={isLogin} setIsLogin={setIsLogin} />
                 ) : (
-                    <CadastroForm />
+                    <CadastroForm isLogin={isLogin} setIsLogin={setIsLogin} />
                 )}
-
             </View>
 
         </ScrollView >
