@@ -1,7 +1,4 @@
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
-const [fontsLoaded] = useFonts({
-    AtkinsonHyperlegible_400Regular,
-});
 
 export default function LoginForm({ isLogin, setIsLogin }) {
     return (
@@ -25,8 +22,11 @@ const styles = StyleSheet.create({
         marginTop: 500,
     },
     texto: {
-        textAlign: 'left',
-        fontFamily: 'AtkinsonHyperlegible_400Regular',
-        fontSize: 18,
+        textAlign: 'justify',
+        fontFamily: 'FonteRegular',
+        color: '#D67274',
+        fontSize: 32,
+        top: 200,
+        position: 'relative'
     }
 });

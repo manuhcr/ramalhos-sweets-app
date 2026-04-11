@@ -4,16 +4,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'; // 
 import Sobre from './telas/Sobre';
 import Login from './telas/Login';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {
-  useFonts,
-  AtkinsonHyperlegible_400Regular
-} from '@expo-google-fonts/atkinson-hyperlegible';
+import { useFonts, AtkinsonHyperlegible_400Regular, AtkinsonHyperlegible_700Bold} from '@expo-google-fonts/atkinson-hyperlegible';
+import { View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator(); // Adicionado
 
 // COMPONENTE DAS ABAS (Sem o Login aqui)
 function Menu() {
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -35,16 +34,18 @@ function Menu() {
   );
 }
 
-// COMPONENTE PRINCIPAL (O Stack controla o Login vs Menu)
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    AtkinsonHyperlegible_400Regular,
-    AtkinsonHyperlegible_700Bold,
+
+  const [fonteCarregada] = useFonts({
+    "FonteRegular": AtkinsonHyperlegible_400Regular,
+    "FonteBold": AtkinsonHyperlegible_700Bold
   });
-  if (!fontsLoaded) return null;
+
+  if (!fonteCarregada) return <View />;
+  
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{ headerShown: false }} id="stack">
         {/* A primeira tela da lista é a que abre primeiro (Login) */}
         <Stack.Screen name="Login" component={Login} />
 

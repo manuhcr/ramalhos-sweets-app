@@ -1,32 +1,32 @@
 {
   "expo": {
-    "name": "Ramalho´s Sweets",
-    "slug": "ramalhos-sweets-app",
+    "name": "ramalhosSweetsApp",
+    "slug": "ramalhosSweetsApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo ramalho´s sweets.png",
+    "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/logo ramalho´s sweets.png",
+      "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FFFAF2"
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo ramalho´s sweets.png",
-        "backgroundColor": "#FFFAF2"
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "edgeToEdgeEnabled": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "expo-font",
       "expo-video"
     ]
   }
