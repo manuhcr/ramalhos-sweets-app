@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'; // 
 import Sobre from './telas/Sobre';
 import Login from './telas/Login';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useFonts, AtkinsonHyperlegible_400Regular, AtkinsonHyperlegible_700Bold} from '@expo-google-fonts/atkinson-hyperlegible';
+import { useFonts, AtkinsonHyperlegible_400Regular, AtkinsonHyperlegible_700Bold } from '@expo-google-fonts/atkinson-hyperlegible';
 import { View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
@@ -42,7 +42,7 @@ export default function App() {
   });
 
   if (!fonteCarregada) return <View />;
-  
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} id="stack">
@@ -51,6 +51,7 @@ export default function App() {
 
         {/* A tela 'Home' carrega o componente das abas */}
         <Stack.Screen name="Home" component={Menu} />
+        <Stack.Screen name="Sobre" component={Sobre} />
       </Stack.Navigator>
     </NavigationContainer>
   );
