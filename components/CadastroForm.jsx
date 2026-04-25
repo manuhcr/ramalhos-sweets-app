@@ -1,14 +1,19 @@
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 export default function CadastroForm({ isLogin, setIsLogin }) {
-  
+
     const [criaemail, setCriaEmail] = useState('');
     const [criasenha, setCriaSenha] = useState('');
     const [senha, setSenha] = useState('');
     const [nome, setNome] = useState('');
-
+    const navigation = useNavigation();
     const logar = () => {
-        console.log("Enviado: ", email, senha);
+        if (criasenha === senha) {
+            navigation.navigate('Home');
+        } else {
+            console.log("Senhas não coincidem");
+        }
     };
     return (
         <View style={styles.container}>

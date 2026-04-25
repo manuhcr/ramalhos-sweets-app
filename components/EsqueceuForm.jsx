@@ -35,14 +35,13 @@ export default function EsqueciSenhaForm({ setIsEsqueci }) {
     );
 }
 
-// Reutilize seus estilos para manter o padrão
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         paddingHorizontal: 30,
         marginTop: 160,
         backgroundColor: '#FFF5F5',
-        flex: 1 // Garante que o fundo cubra tudo
+        flex: 1 
     },
     titulo: { fontSize: 32, color: '#D67274' },
     linha: { width: 140, height: 4, backgroundColor: '#EB8F96', borderRadius: 10, marginBottom: 40, marginTop: 5 },
