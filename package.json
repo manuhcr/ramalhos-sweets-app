@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@expo-google-fonts/atkinson-hyperlegible": "^0.4.1",
+    "@expo-google-fonts/englebert": "^0.4.1",
+    "@expo-google-fonts/handlee": "^0.4.1",
+    "@expo-google-fonts/mali": "^0.4.1",
     "@expo-google-fonts/mystery-quest": "^0.4.1",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-masked-view/masked-view": "0.3.2",

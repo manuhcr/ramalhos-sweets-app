@@ -62,7 +62,7 @@ export default function CadastroForm({ isLogin, setIsLogin }) {
 
             <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
                 <Text style={styles.link}>
-                    Já tem uma conta? <Text style={{ fontWeight: 'bold' }}>Entre!</Text>
+                    Já tem uma conta? <Text style={{fontFamily: 'MaliRegular' , fontWeight: 'bold' }}>Entre!</Text>
                 </Text>
             </TouchableOpacity>
 
@@ -110,10 +110,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    textoBotao: {
-        textAlign: 'center',
-        color: '#FFEAEA'
-    },
+
     check: {
         display: 'flex',
         flexDirection: 'row',
@@ -122,20 +119,20 @@ const styles = StyleSheet.create({
     },
     forgot: {
         color: '#EB8F96',
-        fontSize: 16
-
+        fontSize: 16,
+        fontFamily: 'MaliRegular'
     },
 
     container: {
         justifyContent: 'center',
         paddingHorizontal: 30,
-        marginTop: 160,
-        backgroundColor: '#FFF5F5'
+        marginTop: 160
     },
 
     titulo: {
         fontSize: 32,
         color: '#D67274',
+        fontFamily: "MysteryRegular"
 
     },
 
@@ -188,18 +185,21 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         borderRadius: 12,
         alignItems: 'center',
-        elevation: 4
+        elevation: 4,
+        fontFamily: 'MysteryRegular'
     },
 
     textoBotao: {
         color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold'
+        fontSize: 18,
+        fontFamily: 'MaliRegular'
     },
 
     link: {
         textAlign: 'center',
         marginTop: 25,
-        color: '#D67274'
+        color: '#D67274',
+        fontSize: 18,
+        fontFamily: 'MaliRegular'
     }
 });

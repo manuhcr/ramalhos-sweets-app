@@ -6,7 +6,7 @@ import EsqueciSenhaForm from './EsqueceuForm'
 import { useNavigation } from "@react-navigation/native";
 
 export default function LoginForm({ isLogin, setIsLogin }) {
-    const navigation = useNavigation(); 
+    const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [checado, setChecado] = useState(false);
@@ -19,7 +19,7 @@ export default function LoginForm({ isLogin, setIsLogin }) {
 
         } else {
             console.log("Falha no login");
-           
+
         }
     };
     const [isEsqueci, setIsEsqueci] = useState(false);
@@ -87,15 +87,7 @@ const styles = StyleSheet.create({
         marginTop: 100,
 
     },
-    texto: {
-        textAlign: 'left',
-        fontFamily: 'FonteRegular',
-        color: '#D67274',
-        fontSize: 32,
-        top: 200,
-        left: 30,
-        position: 'relative',
-    },
+ 
     linha: {
         marginTop: 210,
         height: 4,
@@ -118,11 +110,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#EB8F96',
         borderRadius: 8,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     textoBotao: {
         textAlign: 'center',
-        color: '#FFEAEA'
+        color: '#FFEAEA',
+        fontSize: 16,
+        fontFamily: 'MaliBold'
     },
     check: {
         display: 'flex',
@@ -132,7 +126,8 @@ const styles = StyleSheet.create({
     },
     forgot: {
         color: '#EB8F96',
-        fontSize: 16
+        fontSize: 16,
+        fontFamily: 'MaliRegular'
 
     },
 
@@ -140,12 +135,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 30,
         marginTop: 160,
-        backgroundColor: '#FFF5F5'
     },
 
     titulo: {
         fontSize: 32,
         color: '#D67274',
+        fontFamily: 'MysteryRegular'
 
     },
 
@@ -201,15 +196,10 @@ const styles = StyleSheet.create({
         elevation: 4
     },
 
-    textoBotao: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
-
     link: {
         textAlign: 'center',
         marginTop: 25,
         color: '#D67274'
+
     }
 });

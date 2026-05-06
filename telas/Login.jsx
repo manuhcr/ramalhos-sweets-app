@@ -62,7 +62,7 @@ export default function Login() {
                 </Svg>
 
                 <Animated.Image
-                    source={require('../assets/logo ramalho´s sweets.png')}
+                    source={require('../assets/logo.png')}
                     style={[
                         styles.logo,
                         {

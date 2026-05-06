@@ -7,9 +7,16 @@ import Shop from './telas/Shop';
 import Perfil from './telas/Perfil';
 import Login from './telas/Login';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useFonts, AtkinsonHyperlegible_400Regular, AtkinsonHyperlegible_700Bold } from '@expo-google-fonts/atkinson-hyperlegible';
-import { View } from 'react-native';
 
+import {
+  MysteryQuest_400Regular,
+} from '@expo-google-fonts/mystery-quest';
+import { View } from 'react-native';
+import {
+  useFonts,
+  Mali_400Regular,
+  Mali_700Bold,
+} from '@expo-google-fonts/mali';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -45,8 +52,9 @@ function Menu() {
 
 export default function App() {
   const [fonteCarregada] = useFonts({
-    "FonteRegular": AtkinsonHyperlegible_400Regular,
-    "FonteBold": AtkinsonHyperlegible_700Bold
+    "MysteryRegular": MysteryQuest_400Regular,
+    "MaliRegular": Mali_400Regular,
+    "MaliBold": Mali_700Bold
   });
 
   if (!fonteCarregada) return <View />;
