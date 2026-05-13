@@ -72,7 +72,7 @@ export default function LoginForm({ isLogin, setIsLogin }) {
 
             <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
                 <Text style={styles.link}>
-                    Não tem conta? <Text style={{ fontWeight: 'bold' }}>Criar</Text>
+                    Não tem conta? <Text style={styles.linkBold}>Criar</Text>
                 </Text>
             </TouchableOpacity>
 
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         marginTop: 100,
 
     },
- 
+
     linha: {
         marginTop: 210,
         height: 4,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     forgot: {
         color: '#EB8F96',
         fontSize: 16,
-        fontFamily: 'MaliRegular'
+        fontFamily: 'MaliBold'
 
     },
 
@@ -159,12 +159,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 12,
         marginBottom: 20,
-
-        // sombra (iOS + Android)
         elevation: 3,
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 5,
+        fontFamily: 'MaliRegular'
     },
 
     row: {
@@ -180,17 +179,13 @@ const styles = StyleSheet.create({
     },
 
     rememberText: {
-        marginLeft: 8
-    },
-
-    forgot: {
-        color: '#D67274',
-        fontWeight: '500'
+        marginLeft: 8,
+        fontFamily: 'MaliRegular'
     },
 
     botao: {
         backgroundColor: '#D67274',
-        paddingVertical: 16,
+        paddingVertical: 12,
         borderRadius: 12,
         alignItems: 'center',
         elevation: 4
@@ -199,7 +194,12 @@ const styles = StyleSheet.create({
     link: {
         textAlign: 'center',
         marginTop: 25,
-        color: '#D67274'
+        color: '#D67274',
+        fontFamily: 'MaliRegular',
+        fontSize: 16
 
+    },
+    linkBold: {
+        fontFamily: 'MaliBold'
     }
 });

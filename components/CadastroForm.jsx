@@ -62,7 +62,7 @@ export default function CadastroForm({ isLogin, setIsLogin }) {
 
             <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
                 <Text style={styles.link}>
-                    Já tem uma conta? <Text style={{fontFamily: 'MaliRegular' , fontWeight: 'bold' }}>Entre!</Text>
+                    Já tem uma conta? <Text style={styles.linkBold}>Entre!</Text>
                 </Text>
             </TouchableOpacity>
 
@@ -151,8 +151,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 12,
         marginBottom: 20,
-
-        // sombra (iOS + Android)
+        fontFamily: 'MaliRegular',
         elevation: 3,
         shadowColor: '#a76279',
         shadowOpacity: 0.1,
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
 
     botao: {
         backgroundColor: '#D67274',
-        paddingVertical: 16,
+        paddingVertical: 12,
         borderRadius: 12,
         alignItems: 'center',
         elevation: 4,
@@ -198,8 +197,11 @@ const styles = StyleSheet.create({
     link: {
         textAlign: 'center',
         marginTop: 25,
+        fontSize: 16,
         color: '#D67274',
-        fontSize: 18,
         fontFamily: 'MaliRegular'
+    },
+    linkBold: {
+        fontFamily: 'MaliBold'
     }
 });
