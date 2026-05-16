@@ -1,24 +1,70 @@
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
+import {
+    View,
+    TextInput,
+    TouchableOpacity,
+    Text,
+    StyleSheet
+} from "react-native";
+
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function CadastroForm({ isLogin, setIsLogin }) {
 
     const [criaemail, setCriaEmail] = useState('');
     const [criasenha, setCriaSenha] = useState('');
     const [senha, setSenha] = useState('');
     const [nome, setNome] = useState('');
+
     const navigation = useNavigation();
-    const logar = () => {
-        if (criasenha === senha) {
-            navigation.navigate('Home');
-        } else {
-            console.log("Senhas não coincidem");
+
+    const cadastrarUsuario = async () => {
+        try {
+
+            // verifica se as senhas são iguais
+            if (criasenha !== senha) {
+                alert("As senhas não coincidem");
+                return;
+            }
+
+            // cria objeto do usuário
+            const usuario = {
+                nome: nome,
+                email: criaemail,
+                senha: criasenha
+            };
+
+            // salva no AsyncStorage
+            await AsyncStorage.setItem(
+                "usuario",
+                JSON.stringify(usuario)
+            );
+
+            console.log("Usuário cadastrado!");
+
+            // limpa os campos
+            setNome('');
+            setCriaEmail('');
+            setCriaSenha('');
+            setSenha('');
+
+            // volta para login
+            setIsLogin(true);
+
+        } catch (error) {
+            console.log("Erro ao cadastrar:", error);
         }
     };
+
     return (
         <View style={styles.container}>
 
-            <Text style={styles.titulo}>Comece algo doce!</Text>
+            <Text style={styles.titulo}>
+                Comece algo doce!
+            </Text>
+
             <View style={styles.linha} />
 
             <TextInput
@@ -46,23 +92,30 @@ export default function CadastroForm({ isLogin, setIsLogin }) {
                 onChangeText={setSenha}
                 secureTextEntry
             />
+
             <TextInput
                 placeholder="Como devemos te chamar?"
                 placeholderTextColor="#D67274"
                 style={styles.input}
                 value={nome}
                 onChangeText={setNome}
-                secureTextEntry
             />
 
-
-            <TouchableOpacity style={styles.botao} onPress={logar}>
-                <Text style={styles.textoBotao}>Criar conta</Text>
+            <TouchableOpacity
+                style={styles.botao}
+                onPress={cadastrarUsuario}
+            >
+                <Text style={styles.textoBotao}>
+                    Criar conta
+                </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
+            <TouchableOpacity
+                onPress={() => setIsLogin(!isLogin)}
+            >
                 <Text style={styles.link}>
-                    Já tem uma conta? <Text style={styles.linkBold}>Entre!</Text>
+                    Já tem uma conta?
+                    <Text style={styles.linkBold}> Entre!</Text>
                 </Text>
             </TouchableOpacity>
 

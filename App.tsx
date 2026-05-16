@@ -25,21 +25,45 @@ function Menu() {
   return (
     <Tab.Navigator id={undefined}
       screenOptions={({ route }) => ({
+        headerShown: false,
+
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: any = 'help-circle';
-          if (route.name === "Home") { // Alterado para evitar conflito de nomes
+
+          if (route.name === "Home") {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === "Favoritos") {
             iconName = focused ? 'heart' : 'heart-outline';
           } else if (route.name === 'Carrinho') {
             iconName = focused ? 'cart' : 'cart-outline';
+          } else if (route.name === 'Perfil') {
+            iconName = focused ? 'person' : 'person-outline';
           }
+
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        headerShown: false,
-        tabBarActiveTintColor: '#A86B49',
-        tabBarInactiveBackgroundColor: '#FFDEDE',
-        tabBarActiveBackgroundColor: 'FFC1C8'
+
+        tabBarActiveTintColor: 'rgb(253, 172, 172)',
+        tabBarInactiveTintColor: 'rgb(255, 255, 255)',
+
+        tabBarStyle: {
+          position: 'absolute',
+          bottom: 20,
+          left: 20,
+          right: 20,
+          borderRadius: 40,
+          height: 70,
+          margin: 20,
+          backgroundColor:'rgb(124, 73, 46)',
+          borderTopWidth: 0,
+          elevation: 0,
+        },
+
+        tabBarItemStyle: {
+          borderRadius: 20,
+          marginVertical: 5,
+          marginHorizontal: 5,
+        },
       })}
     >
       <Tab.Screen name='Home' component={Home} />

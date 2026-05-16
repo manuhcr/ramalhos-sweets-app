@@ -4,10 +4,39 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { FlatList } from 'react-native';
 import { useState } from 'react';
 import Svg, { Path } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
+
 
 
 
 export default function Home() {
+
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+        const carregarUser = async () => {
+            try {
+                const savedUser = await AsyncStorage.getItem("usuario")
+
+                if (savedUser) {
+                    const dadosUsuario =
+                        JSON.parse(savedUser);
+
+                    setUser(dadosUsuario);
+                }
+            } catch (error) {
+
+                console.log("Erro ao carregar usuário:", error);
+
+            }
+
+        };
+
+        carregarUser();
+
+    }, []);
+
 
     type Categoria = keyof typeof cardapio | 'todos';
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<Categoria>('todos');
@@ -29,9 +58,9 @@ export default function Home() {
     const cardapio = {
         bolos: [
             { nome: "Bolo de chocolate com cobertura cremosa", preco: "R$ 49,90 (1kg)", img: require("../assets/bolochoco.png") },
-            { nome: "Bolo de morango com chantilly", preco: "R$ 54,90 (1kg)" },
+            { nome: "Bolo de morango com chantilly", preco: "R$ 54,90 (1kg)", img: require("../assets/bolomorango.png") },
             { nome: "Bolo de cenoura com calda de chocolate", preco: "R$ 44,90 (1kg)" },
-            { nome: "Bolo Red Velvet com cream cheese", preco: "R$ 64,90 (1kg)" },
+            { nome: "Bolo Red Velvet com cream cheese", preco: "R$ 64,90 (1kg)", img: require("../assets/boloredvelvet.png") },
             { nome: "Bolo de ninho com morango", preco: "R$ 59,90 (1kg)" },
             { nome: "Bolo de limão siciliano", preco: "R$ 52,90 (1kg)" },
             { nome: "Bolo prestígio", preco: "R$ 56,90 (1kg)", img: require("../assets/boloprestigio.png") },
@@ -94,27 +123,27 @@ export default function Home() {
     }[] = [
             {
                 id: "bolos",
-                img: require('../assets/pedaco-de-bolo.png'),
+                img: require('../assets/bolos.png'),
             },
 
             {
                 id: "doces",
-                img: require('../assets/pedaco-de-bolo.png'),
+                img: require('../assets/docesbrasileiros.png'),
             },
 
             {
                 id: "colddesserts",
-                img: require('../assets/sobremesasgeladas.webp'),
+                img: require('../assets/sobremesasgeladas.png'),
             },
 
             {
                 id: "chocoandbrownie",
-                img: require('../assets/chocolate.png'),
+                img: require('../assets/chocoandbrownies.png'),
             },
 
             {
                 id: "especiais",
-                img: require('../assets/especiais.png'),
+                img: require('../assets/docesespeciais.png'),
             }
         ];
 
@@ -154,7 +183,7 @@ export default function Home() {
             <ScrollView contentContainerStyle={styles.content}>
 
                 <View style={styles.header}>
-                    <Text style={styles.greeting}>Olá, { }</Text>
+                    <Text style={styles.greeting}>Olá, {user?.nome}</Text>
                 </View>
 
                 <View style={styles.search}>
@@ -213,13 +242,27 @@ export default function Home() {
 
 
 
+
                 <FlatList
-                    data={pesquisa ? filtros : categoriaSelecionada === 'todos' ? allItems : cardapio[categoriaSelecionada]}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
+                    data={
+                        pesquisa
+                            ? filtros
+                            : categoriaSelecionada === 'todos'
+                                ? allItems
+                                : cardapio[categoriaSelecionada]
+                    }
+                    numColumns={2}
+                    columnWrapperStyle={{
+                        justifyContent: 'space-between',
+                        marginBottom: 15,
+                    }}
+                    showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
+                    contentContainerStyle={{
+                        paddingBottom: 30,
+                    }}
                     renderItem={({ item }) => (
-                        <View style={[styles.product, { width: 220, marginRight: 15 }]}>
+                        <View style={styles.product}>
 
                             {item.img && (
                                 <Image
@@ -239,7 +282,6 @@ export default function Home() {
                         </View>
                     )}
                 />
-
                 <Text style={styles.section}>Destaques</Text>
 
                 <FlatList
@@ -297,9 +339,9 @@ const styles = StyleSheet.create({
     },
 
     greeting: {
-        fontSize: 30,
+        fontSize: 40,
         color: '#A25F3C',
-        fontFamily: 'MisteryRegular',
+        fontFamily: 'MysteryRegular'
     },
 
     title: {
@@ -353,12 +395,11 @@ const styles = StyleSheet.create({
 
     cat: {
         borderColor: '#A66C4D',
-        borderWidth: 1,
-        padding: 5,
-        borderRadius: 20,
+        borderWidth: 1.5,
+        borderRadius: 40,
         alignItems: 'center',
-        width: 60,
-        height: 60
+        width: 70,
+        height: 70
     },
 
     catSelected: {
@@ -367,10 +408,10 @@ const styles = StyleSheet.create({
     },
 
     catImg: {
+        margin: 10,
         width: 50,
         height: 50,
-        resizeMode: 'cover',
-        borderRadius: 15,
+        resizeMode: 'cover'
     },
 
     cards: {
@@ -382,24 +423,13 @@ const styles = StyleSheet.create({
     product: {
         backgroundColor: '#FFF9F7',
         borderRadius: 20,
-        padding: 18,
-
-        shadowColor: '#000',
-
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-
-        elevation: 5,
+        padding: 14,
+        width: '48%',
     },
 
     productImg: {
         width: '100%',
-        height: 40,
+        height: 100,
         borderRadius: 10,
     },
 

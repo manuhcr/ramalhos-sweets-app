@@ -5,20 +5,50 @@ import Checkbox from "expo-checkbox";
 import EsqueciSenhaForm from './EsqueceuForm'
 import { useNavigation } from "@react-navigation/native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function LoginForm({ isLogin, setIsLogin }) {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [checado, setChecado] = useState(false);
 
-    const logar = () => {
-        console.log("Enviado: ", email, senha);
-        if (email === "cruzmanoela55@gmail.com" && senha === 'm@nu2CR4') {
-            console.log("Logado com sucesso!");
-            navigation.navigate('Home')
+    const logar = async () => {
+        try {
 
-        } else {
-            console.log("Falha no login");
+            // pega usuário salvo
+            const usuarioSalvo =
+                await AsyncStorage.getItem("usuario");
+
+            // verifica se existe
+            if (!usuarioSalvo) {
+                alert("Nenhum usuário cadastrado");
+                return;
+            }
+
+            // transforma string em objeto
+            const usuario = JSON.parse(usuarioSalvo);
+
+            // compara login
+            if (
+                usuario.email === email &&
+                usuario.senha === senha
+            ) {
+
+                console.log("Logado com sucesso!");
+
+                navigation.navigate("Home");
+
+            } else {
+
+                console.log("Falha no login");
+                alert("Email ou senha inválidos");
+
+            }
+
+        } catch (error) {
+
+            console.log("Erro no login:", error);
 
         }
     };
