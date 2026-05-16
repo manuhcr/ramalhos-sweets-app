@@ -43,26 +43,39 @@ function Menu() {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
 
-        tabBarActiveTintColor: 'rgb(243, 191, 191)',
+        tabBarActiveTintColor: 'rgb(255, 207, 207)',
         tabBarInactiveTintColor: 'rgb(255, 255, 255)',
 
         tabBarStyle: {
           position: 'absolute',
-          bottom: 20,
+
+          bottom: 10,
           left: 20,
           right: 20,
-          borderRadius: 40,
           height: 70,
-          margin: 20,
-          backgroundColor:'rgb(124, 73, 46)',
+          borderRadius: 30,
+          backgroundColor: 'rgba(141, 88, 67, 0.82)',
+          borderWidth: 2,
+          borderColor: 'rgba(255, 219, 227, 0.6)',
           borderTopWidth: 0,
+
           elevation: 0,
+          margin: 20,
+          shadowColor: '#000',
+          shadowOpacity: 0.08,
+          shadowRadius: 20,
+          shadowOffset: {
+            width: 0,
+            height: 10,
+          },
+
+          overflow: 'hidden',
         },
 
         tabBarItemStyle: {
           borderRadius: 20,
-          marginVertical: 5,
-          marginHorizontal: 5,
+          marginVertical: 7,
+          marginHorizontal: 4,
         },
       })}
     >

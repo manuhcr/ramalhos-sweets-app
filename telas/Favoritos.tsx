@@ -1,183 +1,440 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, ScrollView, TextInput } from 'react-native';
-import { VideoView, useVideoPlayer } from 'expo-video';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRoute } from '@react-navigation/native';
-import { FlatList } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+    TouchableOpacity,
+    Image,
+} from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import React, { useEffect, useState } from 'react';
+
+import Ionicons from '@expo/vector-icons/Ionicons';
+
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 export default function Favoritos() {
 
+    const navigation = useNavigation<any>();
 
-    const player = useVideoPlayer(
-        "https://www.pexels.com/pt-br/download/video/8870910/",
-        player => {
-            player.loop = true;
-            player.play();
+    // ========================================
+    // STATE
+    // ========================================
+
+    const [favoritos, setFavoritos] =
+        useState<any[]>([]);
+
+    // ========================================
+    // CARREGAR FAVORITOS
+    // ========================================
+
+    async function carregarFavoritos() {
+
+        try {
+
+            const data =
+                await AsyncStorage.getItem('@favoritos');
+
+            if (data) {
+
+                setFavoritos(JSON.parse(data));
+
+            }
+
+            else {
+
+                setFavoritos([]);
+
+            }
+
         }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+    }
+
+    // ========================================
+    // REMOVER FAVORITO
+    // ========================================
+
+    async function removerFavorito(
+        nome: string
+    ) {
+
+        try {
+
+            const novosFavoritos =
+                favoritos.filter(
+                    item => item.nome !== nome
+                );
+
+            setFavoritos(novosFavoritos);
+
+            await AsyncStorage.setItem(
+                '@favoritos',
+                JSON.stringify(novosFavoritos)
+            );
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+    }
+
+    // ========================================
+    // USE EFFECT
+    // ========================================
+
+    useFocusEffect(
+
+        React.useCallback(() => {
+
+            carregarFavoritos();
+
+        }, [])
+
     );
 
-    const destaques = [
-        {
-            nome: "Bolo Red Velvet com cream cheese",
-            preco: "R$ 64,90",
-            img: "pedaco-de-bolo.png"
-        },
-        {
-            nome: "Brownie recheado (Nutella, doce de leite, Oreo)",
-            preco: "R$ 9,90",
-            img: "chocolate.png"
-        },
-        {
-            nome: "Macarons coloridos",
-            preco: "R$ 5,50",
-            img: "doces.png"
-        }
-    ];
-    const imagens = {
-        "pedaco-de-bolo.png": require('../assets/doceria.webp'),
-        "chocolate.png": require('../assets/doceria.webp'),
-        "doces.png": require('../assets/doceria.webp'),
-    };
+    // ========================================
+    // RENDER
+    // ========================================
+
     return (
 
-        <LinearGradient
-            colors={['#FFF5F7', '#FFE4E8']}
-            style={{ flex: 1 }}
-        >
+        <View style={styles.container}>
 
+            {/* ========================================
+            HEADER
+            ======================================== */}
 
-            <ScrollView contentContainerStyle={styles.content}>
+            <View style={styles.header}>
 
-                <View style={styles.header}>
-                    <Text style={styles.greeting}>Olá, { }</Text>
+                <Text style={styles.title}>
+                    Meus doces favoritos
+                </Text>
+
+                <Text style={styles.subtitle}>
+                    Total de {favoritos.length} doces salvos
+                </Text>
+
+            </View>
+
+            {/* ========================================
+            VAZIO
+            ======================================== */}
+
+            {favoritos.length === 0 ? (
+
+                <View style={styles.emptyContainer}>
+
+                    <View style={styles.emptyCircle}>
+
+                        <Ionicons
+                            name="heart-outline"
+                            size={90}
+                            color="#D98A97"
+                        />
+
+                    </View>
+
+                    <Text style={styles.emptyTitle}>
+                        Nenhum favorito ainda
+                    </Text>
+
+                    <Text style={styles.emptyText}>
+                        Salve seus doces favoritos
+                        para encontrar depois ✨
+                    </Text>
+
+                    <TouchableOpacity
+                        style={styles.shopBtn}
+                        onPress={() =>
+                            navigation.navigate('Home', {
+                                screen: 'Home',
+                            })
+                        }
+                    >
+
+                        <Text style={styles.shopBtnText}>
+                            Explorar cardápio
+                        </Text>
+
+                    </TouchableOpacity>
+
                 </View>
 
-                <View style={styles.search}>
-                    <Text>🔍</Text>  <TextInput placeholder=' Buscar doces...' style={{ color: '#999' }}></TextInput>
-                </View>
+            ) : (
 
-                <Text style={styles.section}>Categorias</Text>
+                // ========================================
+                // CHEIO
+                // ========================================
 
-                <View style={styles.categories}>
-                    <View style={styles.cat}><Text>🍰</Text><Text>Bolos</Text></View>
-                    <View style={styles.cat}><Text>🍫</Text><Text>Choco</Text></View>
-                    <View style={styles.cat}><Text>🍓</Text><Text>Doces</Text></View>
-                </View>
                 <FlatList
-                    data={destaques}
-                    horizontal
-                    showsHorizontalScrollIndicator={true}
+
+                    data={favoritos}
+
+                    numColumns={2}
+
+                    keyExtractor={(item, index) =>
+                        index.toString()
+                    }
+
+                    columnWrapperStyle={{
+                        justifyContent: 'space-between',
+                        marginBottom: 18,
+                    }}
+
+                    showsVerticalScrollIndicator={false}
+
+                    contentContainerStyle={{
+                        paddingBottom: 140,
+                    }}
+
                     renderItem={({ item }) => (
-                        <View style={[styles.product, { width: 160 }]}>
-                            <Image source={imagens[item.img]} style={styles.productImg} />
-                            <Text>{item.nome}</Text>
+
+                        <View style={styles.card}>
+
+                            {/* CORAÇÃO */}
+
+                            <TouchableOpacity
+                                style={styles.heartBtn}
+                                onPress={() =>
+                                    removerFavorito(item.nome)
+                                }
+                            >
+
+                                <Ionicons
+                                    name="heart"
+                                    size={18}
+                                    color="#E68A9B"
+                                />
+
+                            </TouchableOpacity>
+
+                            {/* IMAGEM */}
+
+                            {item.img && (
+
+                                <Image
+                                    source={item.img}
+                                    style={styles.image}
+                                />
+
+                            )}
+
+                            {/* NOME */}
+
+                            <Text style={styles.name}>
+                                {item.nome}
+                            </Text>
+
+                            {/* PREÇO */}
+
+                            <Text style={styles.price}>
+
+                                R$ {item.preco
+                                    .toFixed(2)
+                                    .replace('.', ',')}
+
+                                <Text style={styles.desc}>
+                                    {' '}{item.descricao}
+                                </Text>
+                            </Text>
+
                         </View>
+
                     )}
                 />
-                <Text style={styles.section}>Destaques</Text>
 
-                <FlatList
-                    data={destaques}
-                    horizontal
-                    showsHorizontalScrollIndicator={true}
-                    renderItem={({ item }) => (
-                        <View style={[styles.product, { width: 160 }]}>
-                            <Image source={imagens[item.img]} style={styles.productImg} />
-                            <Text>{item.nome}</Text>
-                        </View>
-                    )}
-                />
+            )}
 
-
-                <StatusBar style="auto" />
-
-            </ScrollView>
-
-        </LinearGradient>
-
+        </View>
     );
 }
+
 const styles = StyleSheet.create({
 
-    content: {
-        padding: 20,
-
+    container: {
+        flex: 1,
+        backgroundColor: '#FFF8F6',
+        paddingHorizontal: 20,
+        paddingTop: 60,
     },
+
+    // ========================================
+    // HEADER
+    // ========================================
 
     header: {
-        marginTop: 40,
-        marginBottom: 20,
-    },
-
-    greeting: {
-        fontSize: 30,
-        color: '#A25F3C',
-        fontFamily: 'FonteRegular',
+        marginBottom: 25,
     },
 
     title: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        color: '#D67274',
+        fontSize: 34,
+        color: '#4B2E2B',
+        fontFamily: 'MaliBold',
     },
 
-    search: {
-        backgroundColor: '#fff',
-        padding: 12,
+    subtitle: {
+        fontSize: 16,
+        color: '#A38A82',
+        marginTop: 4,
+        fontFamily: 'MaliRegular',
+    },
+
+
+
+    // ========================================
+    // CARD
+    // ========================================
+    card: {
+
+        width: '47%',
+
+        minHeight: 240,
+
+        backgroundColor: '#FFFDFD',
+
+        borderRadius: 28,
+
+        padding: 14,
+
+        borderWidth: 1,
+        borderColor: '#F5E7E2',
+
+        shadowColor: '#000',
+
+        shadowOpacity: 0.04,
+
+        shadowRadius: 12,
+
+        elevation: 2,
+    },
+
+    heartBtn: {
+
+        position: 'absolute',
+
+        top: 12,
+        right: 12,
+
+        width: 30,
+        height: 30,
+
         borderRadius: 20,
-        marginBottom: 20,
-        display: 'flex',
-        flexDirection: 'row'
-    },
 
-    section: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        color: '#5A3E36'
-    },
-
-    categories: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 20,
-    },
-
-    cat: {
-        backgroundColor: '#FFFAF1',
-        padding: 10,
-        borderRadius: 50,
-        alignItems: 'center',
-        width: '30%',
-    },
-
-    cards: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-
-    product: {
         backgroundColor: '#fff',
-        borderRadius: 15,
-        padding: 10,
-        width: '40%',
+
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        zIndex: 2,
     },
 
-    productImg: {
+    image: {
         width: '100%',
-        height: 60,
-        borderRadius: 10,
+        height: 120,
+        resizeMode: 'contain',
+        marginTop: 15,
     },
 
-    productName: {
-        marginTop: 8,
-        fontWeight: 'bold',
+    name: {
+        marginTop: 18,
+        fontSize: 16,
+        color: '#4B2E2B',
+        lineHeight: 22,
+        fontFamily: 'MaliBold',
     },
 
     price: {
+        marginTop: 8,
+        fontSize: 16,
         color: '#D67274',
-        marginTop: 4,
-    }
+        fontFamily: 'MaliBold',
+    },
+
+    desc: {
+        color: '#9A8578',
+        fontSize: 12,
+        fontFamily: 'MaliRegular',
+    },
+
+    // ========================================
+    // EMPTY
+    // ========================================
+
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 35,
+        marginTop: -60,
+    },
+
+    emptyCircle: {
+
+        width: 190,
+        height: 190,
+
+        borderRadius: 100,
+
+        backgroundColor: 'rgba(255,255,255,0.7)',
+
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        marginBottom: 35,
+
+        shadowColor: '#000',
+
+        shadowOpacity: 0.04,
+
+        shadowRadius: 18,
+
+        elevation: 2,
+    },
+
+    emptyTitle: {
+        fontSize: 34,
+        color: '#4B2E2B',
+        textAlign: 'center',
+        fontFamily: 'MaliBold',
+    },
+
+    emptyText: {
+        fontSize: 18,
+        color: '#9A8578',
+        textAlign: 'center',
+        marginTop: 12,
+        lineHeight: 28,
+        fontFamily: 'MaliRegular',
+    },
+
+    shopBtn: {
+
+        marginTop: 40,
+
+        backgroundColor: '#B57B5B',
+
+        paddingHorizontal: 35,
+
+        paddingVertical: 18,
+
+        borderRadius: 20,
+    },
+
+    shopBtnText: {
+        color: '#fff',
+        fontSize: 18,
+        fontFamily: 'MaliBold',
+    },
 
 });

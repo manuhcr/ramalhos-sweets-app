@@ -2,42 +2,121 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FlatList } from 'react-native';
-import { useState } from 'react';
+import React, {
+    useState,
+    useCallback
+} from 'react';
 import Svg, { Path } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
-
-
+import { useFocusEffect } from '@react-navigation/native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 export default function Home() {
 
     const [user, setUser] = useState(null)
+    const [favoritos, setFavoritos] = useState<any[]>([]);
 
-    useEffect(() => {
-        const carregarUser = async () => {
-            try {
-                const savedUser = await AsyncStorage.getItem("usuario")
 
-                if (savedUser) {
-                    const dadosUsuario =
-                        JSON.parse(savedUser);
+    const carregarDados = async () => {
 
-                    setUser(dadosUsuario);
-                }
-            } catch (error) {
+        // USER
 
-                console.log("Erro ao carregar usuário:", error);
+        const savedUser =
+            await AsyncStorage.getItem("usuario");
+
+        if (savedUser) {
+
+            setUser(JSON.parse(savedUser));
+
+        }
+
+        // FAVORITOS
+
+        const favoritosSalvos =
+            await AsyncStorage.getItem('@favoritos');
+
+        if (favoritosSalvos) {
+
+            setFavoritos(
+                JSON.parse(favoritosSalvos)
+            );
+
+        }
+
+    };
+
+    useFocusEffect(
+
+        useCallback(() => {
+
+            carregarDados();
+
+        }, [])
+
+    );
+    const toggleFavorito = async (
+        item: any
+    ) => {
+
+        try {
+
+            const data =
+                await AsyncStorage.getItem('@favoritos');
+
+            let favoritosSalvos =
+                data ? JSON.parse(data) : [];
+
+            const existe =
+                favoritosSalvos.some(
+                    (fav: any) =>
+                        fav.nome === item.nome
+                );
+
+            let novosFavoritos;
+
+            // REMOVE
+
+            if (existe) {
+
+                novosFavoritos =
+                    favoritosSalvos.filter(
+                        (fav: any) =>
+                            fav.nome !== item.nome
+                    );
 
             }
 
-        };
+            // ADICIONA
 
-        carregarUser();
+            else {
 
-    }, []);
+                novosFavoritos = [
+                    ...favoritosSalvos,
+                    item
+                ];
 
+            }
 
+            // SALVA
+
+            await AsyncStorage.setItem(
+                '@favoritos',
+                JSON.stringify(novosFavoritos)
+            );
+
+            // ATUALIZA
+
+            setFavoritos(novosFavoritos);
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+    }
     type Categoria = keyof typeof cardapio | 'todos';
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<Categoria>('todos');
 
@@ -56,52 +135,222 @@ export default function Home() {
 
 
     const cardapio = {
+
         bolos: [
-            { nome: "Bolo de chocolate com cobertura cremosa", preco: "R$ 49,90 (1kg)", img: require("../assets/bolochoco.png") },
-            { nome: "Bolo de morango com chantilly", preco: "R$ 54,90 (1kg)", img: require("../assets/bolomorango.png") },
-            { nome: "Bolo de cenoura com calda de chocolate", preco: "R$ 44,90 (1kg)" },
-            { nome: "Bolo Red Velvet com cream cheese", preco: "R$ 64,90 (1kg)", img: require("../assets/boloredvelvet.png") },
-            { nome: "Bolo de ninho com morango", preco: "R$ 59,90 (1kg)" },
-            { nome: "Bolo de limão siciliano", preco: "R$ 52,90 (1kg)" },
-            { nome: "Bolo prestígio", preco: "R$ 56,90 (1kg)", img: require("../assets/boloprestigio.png") },
-            { nome: "Bolo de doce de leite", preco: "R$ 58,90 (1kg)" },
-            { nome: "Chessecake de frutas vermelhas", preco: "R$ 54,90 (1kg)" }
+
+            {
+                nome: "Bolo de chocolate com cobertura cremosa",
+                preco: 49.90,
+                descricao: "(1kg)",
+                img: require("../assets/bolochoco.png")
+            },
+
+            {
+                nome: "Bolo de morango com chantilly",
+                preco: 54.90,
+                descricao: "(1kg)",
+                img: require("../assets/bolomorango.png")
+            },
+
+            {
+                nome: "Bolo de cenoura com calda de chocolate",
+                preco: 44.90,
+                descricao: "(1kg)"
+            },
+
+            {
+                nome: "Bolo Red Velvet com cream cheese",
+                preco: 64.90,
+                descricao: "(1kg)",
+                img: require("../assets/boloredvelvet.png")
+            },
+
+            {
+                nome: "Bolo de ninho com morango",
+                preco: 59.90,
+                descricao: "(1kg)"
+            },
+
+            {
+                nome: "Bolo de limão siciliano",
+                preco: 52.90,
+                descricao: "(1kg)"
+            },
+
+            {
+                nome: "Bolo prestígio",
+                preco: 56.90,
+                descricao: "(1kg)",
+                img: require("../assets/boloprestigio.png")
+            },
+
+            {
+                nome: "Bolo de doce de leite",
+                preco: 58.90,
+                descricao: "(1kg)"
+            },
+
+            {
+                nome: "Cheesecake de frutas vermelhas",
+                preco: 54.90,
+                descricao: "(1kg)"
+            }
         ],
 
         doces: [
-            { nome: "Brigadeiro gourmet", preco: "R$ 3,50 (unidade)" },
-            { nome: "Beijinho de coco", preco: "R$ 3,00 (unidade)" },
-            { nome: "Cajuzinho", preco: "R$ 3,00 (unidade)" },
-            { nome: "Bicho de pé", preco: "R$ 3,50 (unidade)" },
-            { nome: "Palha italiana", preco: "R$ 5,00 (unidade)" },
-            { nome: "Quindim", preco: "R$ 6,50 (unidade)" },
-            { nome: "Cocada", preco: "R$ 4,50 (unidade)" },
-            { nome: "Canjica doce", preco: "R$ 9,90 (250g)" }
+
+            {
+                nome: "Brigadeiro gourmet",
+                preco: 3.50,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Beijinho de coco",
+                preco: 3.00,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Cajuzinho",
+                preco: 3.00,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Bicho de pé",
+                preco: 3.50,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Palha italiana",
+                preco: 5.00,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Quindim",
+                preco: 6.50,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Cocada",
+                preco: 4.50,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Canjica doce",
+                preco: 9.90,
+                descricao: "(250g)"
+            }
         ],
 
         colddesserts: [
-            { nome: "Pavê de chocolate", preco: "R$ 49,90 (1kg)" },
-            { nome: "Mousse de maracujá", preco: "R$ 7,90 (taça)" },
-            { nome: "Mousse de chocolate com raspas", preco: "R$ 8,90 (taça)" },
-            { nome: "Torta gelada de morango", preco: "R$ 54,90 (1kg)" },
-            { nome: "Sorvete artesanal", preco: "R$ 12,90 (500ml)" },
-            { nome: "Geladinho gourmet", preco: "R$ 5,00 (unidade)" }
+
+            {
+                nome: "Pavê de chocolate",
+                preco: 49.90,
+                descricao: "(1kg)"
+            },
+
+            {
+                nome: "Mousse de maracujá",
+                preco: 7.90,
+                descricao: "(taça)"
+            },
+
+            {
+                nome: "Mousse de chocolate com raspas",
+                preco: 8.90,
+                descricao: "(taça)"
+            },
+
+            {
+                nome: "Torta gelada de morango",
+                preco: 54.90,
+                descricao: "(1kg)"
+            },
+
+            {
+                nome: "Sorvete artesanal",
+                preco: 12.90,
+                descricao: "(500ml)"
+            },
+
+            {
+                nome: "Geladinho gourmet",
+                preco: 5.00,
+                descricao: "(unidade)"
+            }
         ],
 
         chocoandbrownie: [
-            { nome: "Brownie de chocolate", preco: "R$ 7,90 (unidade)" },
-            { nome: "Brownie recheado", preco: "R$ 9,90 (unidade)" },
-            { nome: "Cookie recheado", preco: "R$ 6,50 (unidade)" },
-            { nome: "Trufas de chocolate", preco: "R$ 4,90 (unidade)" },
-            { nome: "Barrinha de chocolate caseira", preco: "R$ 7,50 (unidade)" }
+
+            {
+                nome: "Brownie de chocolate",
+                preco: 7.90,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Brownie recheado",
+                preco: 9.90,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Cookie recheado",
+                preco: 6.50,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Trufas de chocolate",
+                preco: 4.90,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Barrinha de chocolate caseira",
+                preco: 7.50,
+                descricao: "(unidade)"
+            }
         ],
 
         especiais: [
-            { nome: "Macarons coloridos", preco: "R$ 5,50 (unidade)" },
-            { nome: "Churros", preco: "R$ 7,90 (unidade)" },
-            { nome: "Rabanada açucarada", preco: "R$ 6,50 (unidade)" },
-            { nome: "Waffle com frutas", preco: "R$ 14,90 (prato)" },
-            { nome: "Donuts", preco: "R$ 8,90 (unidade)" }
+
+            {
+                nome: "Macarons coloridos",
+                preco: 5.50,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Churros",
+                preco: 7.90,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Rabanada açucarada",
+                preco: 6.50,
+                descricao: "(unidade)"
+            },
+
+            {
+                nome: "Waffle com frutas",
+                preco: 14.90,
+                descricao: "(prato)"
+            },
+
+            {
+                nome: "Donuts",
+                preco: 8.90,
+                descricao: "(unidade)"
+            }
         ]
     };
     const [pesquisa, setPesquisa] = useState('');
@@ -183,7 +432,7 @@ export default function Home() {
             <ScrollView contentContainerStyle={styles.content}>
 
                 <View style={styles.header}>
-                    <Text style={styles.greeting}>Olá, {user?.nome}</Text>
+                    <Text style={styles.greeting}>Olá, {user?.nome || 'visitante'}</Text>
                 </View>
 
                 <View style={styles.search}>
@@ -192,7 +441,7 @@ export default function Home() {
                         placeholderTextColor="#C89A9A"
                         style={{
                             color: '#5A3E36',
-                            backgroundColor: '#f1dede63',
+                            backgroundColor: '#f1dede8f',
                             borderRadius: 8,
                             fontSize: 15,
                             flex: 1,
@@ -219,25 +468,32 @@ export default function Home() {
 
                 <View style={{ marginTop: 60 }}>
                     <Text style={styles.section}>Categorias</Text>
-                    <View style={styles.categories}>
-                        {categorias.map((item) => (
+                    <FlatList
+                        data={categorias}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                            paddingRight: 20,
+                        }}
+                        renderItem={({ item }) => (
                             <TouchableOpacity
                                 key={item.id}
                                 style={[
                                     styles.cat,
-                                    categoriaSelecionada === item.id && styles.catSelected
+                                    categoriaSelecionada === item.id &&
+                                    styles.catSelected
                                 ]}
-                                onPress={() => setCategoriaSelecionada(item.id)}
+                                onPress={() =>
+                                    setCategoriaSelecionada(item.id)
+                                }
                             >
                                 <Image
                                     source={item.img}
                                     style={styles.catImg}
                                 />
-
                             </TouchableOpacity>
-
-                        ))}
-                    </View>
+                        )}
+                    />
                 </View>
 
 
@@ -263,7 +519,21 @@ export default function Home() {
                     }}
                     renderItem={({ item }) => (
                         <View style={styles.product}>
+                            <View style={styles.favoriteRow}>
 
+                                <TouchableOpacity
+                                    onPress={() => toggleFavorito(item)}
+                                >
+
+                                    <Ionicons
+                                        name={favoritos.some(fav => fav.nome === item.nome) ? 'heart' : 'heart-outline'}
+                                        size={20}
+                                        color="#D67274"
+                                    />
+
+                                </TouchableOpacity>
+
+                            </View>
                             {item.img && (
                                 <Image
                                     source={item.img}
@@ -276,7 +546,15 @@ export default function Home() {
                             </Text>
 
                             <Text style={styles.price}>
-                                {item.preco}
+
+                                R$ {item.preco
+                                    .toFixed(2)
+                                    .replace('.', ',')}
+
+                                <Text style={styles.desc}>
+                                    {' '}{item.descricao}
+                                </Text>
+
                             </Text>
 
                         </View>
@@ -377,31 +655,28 @@ const styles = StyleSheet.create({
     },
 
     section: {
-        fontSize: 21,
+        fontSize: 30,
         fontWeight: '700',
-        marginBottom: 14,
-        marginTop: 10,
+        marginBottom: 20,
         color: '#5e382e',
         fontFamily: 'MysteryRegular',
     },
 
     categories: {
-        justifyContent: 'space-between',
         marginBottom: 20,
-        display: 'flex',
-        flexDirection: 'row',
-
     },
-
     cat: {
-        borderColor: '#A66C4D',
-        borderWidth: 1.5,
-        borderRadius: 40,
-        alignItems: 'center',
         width: 70,
-        height: 70
+        height: 70,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 14,
+        backgroundColor: 'hsla(36, 100%, 86%, 0.36)',
+        borderWidth: 1.5,
+        borderColor: '#A66C4D',
+        marginBottom: 40,
     },
-
     catSelected: {
         backgroundColor: '#D67274',
         borderColor: '#D67274',
@@ -409,8 +684,8 @@ const styles = StyleSheet.create({
 
     catImg: {
         margin: 10,
-        width: 50,
-        height: 50,
+        width: 45,
+        height: 45,
         resizeMode: 'cover'
     },
 
@@ -425,6 +700,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 14,
         width: '48%',
+        position: 'relative',
     },
 
     productImg: {
@@ -441,8 +717,26 @@ const styles = StyleSheet.create({
     },
 
     price: {
-        color: '#D67274',
+        color: '#c55d5f',
         marginTop: 4,
-    }
+    },
+    favoriteRow: {
 
+        position: 'absolute',
+
+        top: 10,
+        right: 10,
+
+        width: 32,
+        height: 32,
+
+        borderRadius: 20,
+
+        backgroundColor: '#ffffffd9',
+
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        zIndex: 2,
+    },
 });
