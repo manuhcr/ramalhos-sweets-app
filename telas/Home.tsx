@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
         marginBottom: 14,
         marginTop: 10,
         color: '#5e382e',
-        fontFamily: 'MisteryRegular',
+        fontFamily: 'MysteryRegular',
     },
 
     categories: {

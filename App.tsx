@@ -43,7 +43,7 @@ function Menu() {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
 
-        tabBarActiveTintColor: 'rgb(253, 172, 172)',
+        tabBarActiveTintColor: 'rgb(243, 191, 191)',
         tabBarInactiveTintColor: 'rgb(255, 255, 255)',
 
         tabBarStyle: {
